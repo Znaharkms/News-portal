@@ -1,6 +1,7 @@
 <!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
 
+{% load custom_filters %}
 <!-- Название у нас будет products -->
 {% block title %}
 News
@@ -9,6 +10,8 @@ News
 <!-- В контенте на странице мы выводим все товары -->
 {% block content %}
 <h1>Все статьи и новости</h1>
+<h6><span
+        style="color: #999999;">/ Количество записей: {{news|length}} /</span></h6>
 {% if news %}
 <div class="list-group">
     <br>

@@ -1,6 +1,6 @@
 <!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
-
+{%load custom_filters %}
 <!-- Название у нас будет Product -->
 {% block title %}
 New
@@ -21,11 +21,14 @@ New
         style="color: #800000;">{{ new.title }}</span></h3>
 <h6 style="text-align: left;"><span
         style="color: #999999;">Дата публикации: {{ new.date|date:'d M Y h:m:s' }}</span></h6>
-<h5 style="text-align: left;">{{ new.text }}</h5>
+<h5 style="text-align: left;">{{ new.text|censor }}</h5>
 <h6 style="text-align: left;"><span
         style="color: #999999;">Автор: {{ new.user.user }}</span></h6>
 <h6 style="text-align: left;"><span
-        style="color: #999999;">Теги: {{ new.tag }}</span></h6>
+        style="color: #999999;">Теги:
+    {% for cat in new.category.all %}
+    {{ cat.category }}
+    {% endfor %} </span></h6>
 
 {% endif %}
 {% endblock content %}
