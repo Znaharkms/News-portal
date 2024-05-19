@@ -245,12 +245,12 @@ sup {
 }
 
 a {
-  color: #000000;
+  color: #0059FF;
   text-decoration: none;
 }
 a:hover {
-  color: #000000;
-  background: #CB5656;
+  color: #D60000;
+  background: #99E0FB;
 }
 
 a:not([href]):not([class]), a:not([href]):not([class]):hover {
@@ -398,7 +398,9 @@ button:not(:disabled),
 }
 
 textarea {
-  resize: vertical;
+  resize: both;
+  cols: 60;
+  placeholder: 'Введите ваш текс...'
 }
 
 fieldset {
@@ -1899,7 +1901,7 @@ progress {
 
 .table-light {
   --bs-table-color: #000;
-  --bs-table-bg: #f8f9fa;
+  --bs-table-bg: #d7ebff;
   --bs-table-border-color: #dfe0e1;
   --bs-table-striped-bg: #ecedee;
   --bs-table-striped-color: #000;

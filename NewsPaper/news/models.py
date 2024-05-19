@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
+from django.urls import reverse
 
 
 # Create your models here.
@@ -12,16 +13,16 @@ class Author(models.Model):
     rating = models.SmallIntegerField(default=0)
 
     def __str__(self):
-        return self.user
+        return f'{self.user}'
 
-    def update_rating(self):
-        post_rating = self.post.aggregate(pr=Coalesce(Sum('rating'), 0))['pr']
-        comments_rating = self.user.comment.aggregate(cr=Coalesce(Sum('rating'), 0))['cr']
-        post_comments_rating = self.post.aggregate(pcr=Coalesce(Sum('comment__rating'), 0))[
-            'pcr']
-
-        self.rating = post_rating * 3 + comments_rating + post_comments_rating
-        self.save()
+    # def update_rating(self):
+    #     post_rating = self.post.aggregate(pr=Coalesce(Sum('rating'), 0))['pr']
+    #     comments_rating = self.user.comment.aggregate(cr=Coalesce(Sum('rating'), 0))['cr']
+    #     post_comments_rating = self.post.aggregate(pcr=Coalesce(Sum('comment__rating'), 0))[
+    #         'pcr']
+    #
+    #     self.rating = post_rating * 3 + comments_rating + post_comments_rating
+    #     self.save()
 
 
 class Category(models.Model):
@@ -32,9 +33,6 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-    # article = 'AR'
-    # news = 'NE'
-
     categor = [
         ('AR', 'Статья'),
         ('NE', 'Новость'),
@@ -47,16 +45,29 @@ class Post(models.Model):
     text = models.TextField()
     rating = models.SmallIntegerField(default=0)
 
+    def update_rating(self):  # перенес из модели Author
+        post_rating = self.post.aggregate(pr=Coalesce(Sum('rating'), 0))['pr']
+        comments_rating = self.user.comment.aggregate(cr=Coalesce(Sum('rating'), 0))['cr']
+        post_comments_rating = self.post.aggregate(pcr=Coalesce(Sum('comment__rating'), 0))[
+            'pcr']
+        self.rating = post_rating * 3 + comments_rating + post_comments_rating
+        self.save()
+
     def preview(self):
         return f'{self.text[0:123]} ...'
 
     def like(self):
         self.rating += 1
         self.save()
+        self.user.update_rating()
 
     def dislike(self):
         self.rating -= 1
         self.save()
+        self.user.update_rating()
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.title}\n{self.text}'

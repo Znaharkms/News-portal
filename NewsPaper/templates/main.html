@@ -12,11 +12,12 @@ News
 {% block content %}
 
 <div class="flex-container">
-    <a href="create/" class="btn">📝 Добавить новость</a>
-
+    <a href="/news/create/" class="btn">📝 Добавить новость</a>
+    <p></p>
+    <a href="/articles/create/" class="btn">📰 Добавить статью</a>
 </div>
 
-<h1>Только новости</h1>
+<h1>Все статьи и новости</h1>
 
 
 <form action="" method="get">
@@ -31,13 +32,18 @@ News
 
 
 <h6><span
-        style="color: #999999;">/ Количество записей: {{news|length}} /</span></h6>
-{% if news %}
+        style="color: #999999;">/ Количество записей: {{posts|length}} /</span></h6>
+{% if posts %}
 <div class="list-group">
     <br>
-    {% for new in news %}
+    {% for new in posts %}
+    <!-- Не забываем, что переменные в шаблоне ничем не отличаются
+     от переменных в Python. Здесь также можно получать доступ к
+     полям объекта модели. Например, здесь мы выводим имя,
+     в следующем столбце описание, и т.д.  -->
 
     <a href="{{ new.id }}" class="list-group-item list-group-item-action">
+        <!--<a href="{{ new.id }}" style='text-decoration:none; background:#A96767; color:#000000;'>-->
         <h3 style="text-align: left;"><span
                 style="color: #800000;">{{ new.title }}</span></h3>
         <h6 style="text-align: left;"><span
@@ -45,7 +51,6 @@ News
         <h5 style="text-align: left;">{{ new.text | truncatewords:20 }}</h5>
         <h6 style="text-align: left;"><span
                 style="color: #999999;">Автор: {{ new.user.user }}</span></h6>
-
     </a>
     {% endfor %}
 </div>
