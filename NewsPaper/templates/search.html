@@ -5,16 +5,20 @@
 {% load custom_tags %}
 
 {% block title %}
-Article
+News
 {% endblock title %}
 
+<!-- В контенте на странице мы выводим все товары -->
 {% block content %}
 
 <div class="flex-container">
-    <a href="create/" class="btn">📝 Добавить статью</a>
+    <a href="/news/create/" class="btn">📝 Добавить новость</a>
+    <p></p>
+    <a href="/articles/create/" class="btn">📰 Добавить статью</a>
+
 </div>
 
-<h1>Все статьи</h1>
+<h1>Все статьи и новости</h1>
 
 
 <form action="" method="get">
@@ -29,30 +33,30 @@ Article
 
 
 <h6><span
-        style="color: #999999;">/ Количество записей: {{articles|length}} /</span></h6>
-{% if articles %}
+        style="color: #999999;">/ Количество записей: {{posts|length}} /</span></h6>
+{% if posts %}
 <div class="list-group">
     <br>
-    {% for article in articles %}
+    {% for new in posts %}
     <!-- Не забываем, что переменные в шаблоне ничем не отличаются
      от переменных в Python. Здесь также можно получать доступ к
      полям объекта модели. Например, здесь мы выводим имя,
      в следующем столбце описание, и т.д.  -->
 
-    <a href="{{ article.id }}" class="list-group-item list-group-item-action">
+    <a href="{{ new.id }}" class="list-group-item list-group-item-action">
+        <!--<a href="{{ new.id }}" style='text-decoration:none; background:#A96767; color:#000000;'>-->
         <h3 style="text-align: left;"><span
-                style="color: #800000;">{{ article.title }}</span></h3>
+                style="color: #800000;">{{ new.title }}</span></h3>
         <h6 style="text-align: left;"><span
-                style="color: #999999;">Дата публикации: {{article.date |date:'d M Y h:m:s'}}</span></h6>
-        <h5 style="text-align: left;">{{ article.text | truncatewords:20 }}</h5>
+                style="color: #999999;">Дата публикации: {{ new.date |date:'d M Y h:m:s'}}</span></h6>
+        <h5 style="text-align: left;">{{ new.text | truncatewords:20 }}</h5>
         <h6 style="text-align: left;"><span
-                style="color: #999999;">Автор: {{ article.user.user }}</span></h6>
+                style="color: #999999;">Автор: {{ new.user.user }}</span></h6>
     </a>
-
     {% endfor %}
 </div>
 {% else %}
-<h2>Статей нет!</h2>
+<h2>Новостей нет!</h2>
 {% endif %}
 
 {% if page_obj.has_previous %}
@@ -81,3 +85,6 @@ Article
 
 
 {% endblock content %}
+
+
+
