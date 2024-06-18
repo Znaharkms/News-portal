@@ -107,7 +107,7 @@ class NewsList(ListView):
     ordering = '-date'
     template_name = 'news.html'
     context_object_name = 'news'
-    paginate_by = 2
+    paginate_by = 4
 
     # Переопределяем функцию получения списка новостей
     def get_queryset(self):
@@ -154,7 +154,7 @@ class ArticlesList(ListView):
     ordering = '-date'
     template_name = 'articles.html'
     context_object_name = 'articles'
-    paginate_by = 2
+    paginate_by = 4
 
     # Переопределяем функцию получения списка новостей
     def get_queryset(self):
@@ -176,3 +176,15 @@ class ArticleCreate(CreateView):
     form_class = NewForm
     model = Post
     template_name = 'article_edit.html'
+
+
+class ArticleEdit(UpdateView):
+    form_class = NewForm
+    model = Post
+    template_name = 'article_edit.html'
+
+
+class ArticleDelete(DeleteView):
+    model = Post
+    template_name = 'article_delete.html'
+    success_url = reverse_lazy('news_list')

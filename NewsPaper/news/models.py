@@ -67,7 +67,7 @@ class Post(models.Model):
         self.user.update_rating()
 
     def get_absolute_url(self):
-        return reverse('news_list', args=[str(self.id)])
+        return reverse('post_detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.title}\n{self.text}'

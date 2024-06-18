@@ -19,17 +19,6 @@ News
 <h1>Только новости</h1>
 
 
-<form action="" method="get">
-    {% csrf_token %}
-    {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
-
-    {{ filterset.form.as_table }}
-
-    {# Добавим кнопку отправки данных формы #}
-    <input type="submit" value="Найти"/>
-</form>
-
-
 <h6><span
         style="color: #999999;">/ Количество записей: {{news|length}} /</span></h6>
 {% if news %}

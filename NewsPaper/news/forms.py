@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 
 class NewForm(forms.ModelForm):
     text = forms.CharField(label="Текст поста", min_length=100, widget=forms.Textarea)
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), label='Категория')
+    category = forms.ModelMultipleChoiceField(queryset=Category.objects.all(), label='Категория')
 
     class Meta:
         model = Post

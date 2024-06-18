@@ -6,11 +6,10 @@ New
 {% endblock title %}
 
 {% block content %}
-<h1>Вы действительно хотите удалить новость?</h1>
+<h1>Удалить новость</h1>
 <hr>
 <form action="" method="post">
     {% csrf_token %}
-
 
     <h3 style="text-align: left;"><span
             style="color: #800000;">{{ object.title }}</span></h3>

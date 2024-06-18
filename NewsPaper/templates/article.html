@@ -3,11 +3,18 @@
 {%load custom_filters %}
 <!-- Название у нас будет Product -->
 {% block title %}
-New
+Article
 {% endblock title %}
 
 <!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
 {% block content %}
+
+<div class="flex-container">
+    <a href="{% url 'article_edit' pk=object.pk %}" class="btn">✍️ Редактировать статью</a>
+    <p></p>
+    <a href="{% url 'article_delete' pk=object.pk %}" class="btn">❌ Удалить</a>
+</div>
+
 {% if article %}
 <!--<h1>{{ new }}</h1>-->
 
