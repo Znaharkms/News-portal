@@ -10,9 +10,11 @@ Article
 
 {% block content %}
 
+{% if perms.news.add_new %}
 <div class="flex-container">
     <a href="create/" class="btn">📝 Добавить статью</a>
 </div>
+{% endif %}
 
 <h1>Все статьи</h1>
 

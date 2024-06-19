@@ -7,6 +7,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import NewForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 class PostList(ListView):
@@ -125,7 +127,8 @@ class NewDetail(DetailView):
         return context
 
 
-class NewCreate(CreateView):
+class NewCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_product',)
     form_class = NewForm
     model = Post
     template_name = 'new_edit.html'
@@ -136,13 +139,15 @@ class NewCreate(CreateView):
         return super().form_valid(form)
 
 
-class NewEdit(UpdateView):
+class NewEdit(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_product',)
     form_class = NewForm
     model = Post
     template_name = 'new_edit.html'
 
 
-class NewDelete(DeleteView):
+class NewDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_product',)
     model = Post
     template_name = 'new_delete.html'
     success_url = reverse_lazy('news_list')
@@ -172,19 +177,23 @@ class ArticleDetail(DetailView):
         return context
 
 
-class ArticleCreate(CreateView):
+class ArticleCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_product',)
+    raise_exception = True
     form_class = NewForm
     model = Post
     template_name = 'article_edit.html'
 
 
-class ArticleEdit(UpdateView):
+class ArticleEdit(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_product',)
     form_class = NewForm
     model = Post
     template_name = 'article_edit.html'
 
 
-class ArticleDelete(DeleteView):
+class ArticleDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_product',)
     model = Post
     template_name = 'article_delete.html'
     success_url = reverse_lazy('news_list')

@@ -9,11 +9,13 @@ Article
 <!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
 {% block content %}
 
+{% if perms.news.add_new %}
 <div class="flex-container">
     <a href="{% url 'article_edit' pk=object.pk %}" class="btn">✍️ Редактировать статью</a>
     <p></p>
     <a href="{% url 'article_delete' pk=object.pk %}" class="btn">❌ Удалить</a>
 </div>
+{% endif%}
 
 {% if article %}
 <!--<h1>{{ new }}</h1>-->

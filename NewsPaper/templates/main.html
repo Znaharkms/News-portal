@@ -11,6 +11,7 @@ News
 <!-- В контенте на странице мы выводим все товары -->
 {% block content %}
 
+{% if perms.news.add_new %}
 <div class="flex-container">
     <a href="/news/create/" class="btn">📝 Добавить новость</a>
     <p></p>
@@ -18,6 +19,8 @@ News
     <p></p>
     <a href="/main/search/" class="btn">🔍️ Поиск</a>
 </div>
+{% endif%}
+
 
 <h1>Все статьи и новости</h1>
 

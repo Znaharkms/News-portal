@@ -8,12 +8,14 @@ New
 
 <!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
 {% block content %}
+
+{% if perms.news.add_new %}
 <div class="flex-container">
     <a href="{% url 'new_edit' pk=object.pk %}" class="btn">✍️ Редактировать новость</a>
     <p></p>
     <a href="{% url 'new_delete' pk=object.pk %}" class="btn">❌ Удалить</a>
 </div>
-
+{% endif%}
 
 {% if new %}
 <!--<h1>{{ new }}</h1>-->
