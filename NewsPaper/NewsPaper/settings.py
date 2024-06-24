@@ -37,18 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
+    "django_apscheduler",
 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.yandex',
 
-    'news',
+    'news.apps.NewsConfig',
     'accounts',
     'django_filters',
 ]
-
-ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
 
 LOGIN_REDIRECT_URL = "/news"
 
@@ -71,7 +70,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
 
 TEMPLATES = [
     {
@@ -147,3 +148,33 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# Настройки для отправки писем новому пользователю
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = "znahartemp@yandex.ru"
+EMAIL_HOST_PASSWORD = "gyicaitmekebqvxx"
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = "znahartemp@yandex.ru"
+
+# Для отправки писем списку администраторов. Например, о новом пользователе.
+SERVER_EMAIL = "znahartemp@yandex.ru"
+
+# Список менеджеров для рассылки
+MANAGERS = (
+    ('Андрей', 'korminkms@mail.ru'),
+)
+
+# Список админов для рассылки
+ADMINS = (
+    ('Андрей', 'korminkms@mail.ru'),
+)
+EMAIL_SUBJECT_PREFIX = '[Новостной портал]'
+
+SITE_URL = 'http://127.0.0.1:8000'
+
+# Для отправки писем по расписанию
+APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
