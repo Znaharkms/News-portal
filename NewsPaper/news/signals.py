@@ -5,50 +5,19 @@ from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.template.loader import render_to_string
 
-from .models import PostCategory, Post
+from .models import PostCategory, Subscription
+from .tasks import send_mail_new_post
 from django.utils import timezone
-
-
-def send_notification(preview, pk, title, subscribers):
-    html = render_to_string(
-        'post_created_email html',
-        {
-            'text': preview,
-            'link': f"{settings.SITE_URL}/news/{pk}"
-        }
-    )
-
-    msg = EmailMultiAlternatives(
-        subject=title,
-        body='',
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=subscribers,
-    )
-    msg.attach_alternative(html, "text/html")
-    msg.send()
-
-
-# @receiver(m2m_changed, sender=PostCategory)
-# def post_created(instance, **kwargs):
-#     if kwargs['action'] == 'post_add':
-#         categories = instance.category.all()
-#         print('categories -----> ', categories)
-#         subscribers_emails = []
-#         # subscription = []
-#
-#         for category in categories:
-#             print('category ', category)
-#             subscribers = Subscription.objects.filter(category=category)
-#             print('subscribers ', subscribers.all())
-#
-#             subscribers_emails += [s.email for s in subscribers]
-#
-#         send_notification(instance.preview, instance.pk, instance.title, subscribers_emails)
 
 
 @receiver(m2m_changed, sender=PostCategory)
 def post_created(instance, **kwargs):
     if kwargs["action"] == 'post_add':
+        print('pk  ', instance.pk)
+        send_mail_new_post.delay(instance.pk)
+
+
+"""     Эта часть кода перенесена в tasks -> send_mail_new_post
         emails = User.objects.filter(
             subscriptions__category__in=instance.category.all()
         ).values_list('email', flat=True)
@@ -66,4 +35,4 @@ def post_created(instance, **kwargs):
             print('***********email ', email)
             msg = EmailMultiAlternatives(subject, html_content, None, [email])
             msg.attach_alternative(html_content, "text/html")
-            msg.send()
+            msg.send()"""

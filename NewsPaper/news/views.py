@@ -16,6 +16,7 @@ from django.db.models import Exists, OuterRef
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from .models import Subscription, Category
+from .tasks import send_mail_new_post
 
 
 class PostList(ListView):
@@ -139,10 +140,14 @@ class NewCreate(PermissionRequiredMixin, CreateView):
     form_class = NewForm
     model = Post
     template_name = 'new_edit.html'
+    print('В классе')
 
     def form_valid(self, form):
         post = form.save(commit=False)
         post.type = 'NE'
+        print('form valid1 ', post.pk)
+        # send_mail_new_post.apply_async([post.pk], countdown=1)
+        print('form valid2')
         return super().form_valid(form)
 
 
