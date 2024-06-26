@@ -13,7 +13,6 @@ from django.utils import timezone
 @receiver(m2m_changed, sender=PostCategory)
 def post_created(instance, **kwargs):
     if kwargs["action"] == 'post_add':
-        print('pk  ', instance.pk)
         send_mail_new_post.delay(instance.pk)
 
 

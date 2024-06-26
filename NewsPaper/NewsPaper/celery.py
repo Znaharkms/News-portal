@@ -8,12 +8,13 @@ app = Celery('NewsPaper')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
-#
-# app.conf.beat_schedule = {
-#     'action_every_monday_8am': {
-#         'task': 'accounts.tasks.weekly_send_emails',
-#         'schedule': crontab(),
-#         #       'schedule': crontab(hour=8, minute=0, day_of_week='monday'),
-#         'args': (),
-#     },
-# }
+
+app.conf.beat_schedule = {
+    'action_every_monday_8am': {
+        'task': 'news.tasks.weekly_send_emails',
+        # 'schedule': crontab(),
+        'schedule': 15,
+        # 'schedule': crontab(hour=8, minute=00, day_of_week='monday'),
+        'args': (),
+    },
+}
