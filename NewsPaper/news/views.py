@@ -4,7 +4,6 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
 from .filters import PostFilter
-from pprint import pprint
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
@@ -17,12 +16,17 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from .models import Subscription, Category
 from .tasks import send_mail_new_post
+from django.core.cache import cache
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 # from django.views.decorators.cache import cache_page
 
 
 class PostList(ListView):
+    logger.info('INFO')
     # Указываем модель, объекты которой мы будем выводить
     model = Post
     # Поле, которое будет использоваться для сортировки объектов
@@ -124,7 +128,7 @@ class NewsList(ListView):
 
     # Переопределяем функцию получения списка новостей
     def get_queryset(self):
-        return Post.objects.filter(type='NE')
+        return Post.objects.filter(type='NE').order_by('-date')
 
 
 class NewDetail(DetailView):
@@ -174,18 +178,42 @@ class ArticlesList(ListView):
 
     # Переопределяем функцию получения списка новостей
     def get_queryset(self):
-        return Post.objects.filter(type='AR')
+        return Post.objects.filter(type='AR').order_by('-date')
+
+
+"""class NewsList(ListView):
+    model = Post
+    ordering = '-date'
+    template_name = 'news.html'
+    context_object_name = 'news'
+    paginate_by = 4
+
+    # Переопределяем функцию получения списка новостей
+    def get_queryset(self):
+        return Post.objects.filter(type='NE')"""
 
 
 class ArticleDetail(DetailView):
-    model = Post
+    # model = Post
     template_name = 'article.html'
     context_object_name = 'article'
+
+    # queryset = Post.objects.filter(type='AR')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['tag'] = Post.category
         return context
+
+    def get_object(self, *args, **kwargs):  # переопределяем метод получения объекта, как ни странно
+        obj = cache.get(f'post-{self.kwargs["pk"]}',
+                        None)  # кэш очень похож на словарь, и метод get действует так же. Он забирает значение по ключу, если его нет, то забирает None.
+
+        # если объекта нет в кэше, то получаем его и записываем в кэш
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+        return obj
 
 
 class ArticleCreate(PermissionRequiredMixin, CreateView):
